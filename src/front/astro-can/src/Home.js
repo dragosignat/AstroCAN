@@ -4,16 +4,35 @@ import { Link } from 'react-router-dom'
 
 export default function Home() {
 
-    const [sound, setSound]=useState([])
+    const [videoUrl, setVideoUrl] = useState('');
+
+    const handleImageUpload = async (e) => {
+        const file = e.target.files[0];
+
+        const reader = new FileReader();
+
+        reader.onload = async () => {
+            const imageData = reader.result.split(',')[1]; // Extract base64 data
+
+            try {
+                const response = await axios.post('YOUR_API_ENDPOINT', {
+                    imageData: imageData
+                });
+
+                const videoUrl = response.data.videoUrl;
+                setVideoUrl('https://www.youtube.com/watch?v=S6PN19WRIV0&ab_channel=AlexePaul');
+            } catch (error) {
+                console.error('Error uploading image:', error);
+            }
+            setVideoUrl('https://www.youtube.com/watch?v=S6PN19WRIV0&ab_channel=AlexePaul');
+        };
+
+        reader.readAsDataURL(file);
+    };
 
     useEffect((e) => {
-       loadSound();
        window.scrollTo(0, 0);
     }, []);
-
-    const loadSound=async()=> {
-    }
-
 
   return (
     <div>
@@ -74,7 +93,16 @@ export default function Home() {
     </section>
 
     <section class="text-center content-section id" id="listen">
-
+        <input type="file" accept="image/*" onChange={handleImageUpload} />
+            {videoUrl && (
+                <div>
+                    <h2>Generated Video</h2>
+                    <video width="600" height="400" controls>
+                        <source src={videoUrl} type="video/mp4" />
+                        Your browser does not support the video tag.
+                    </video>
+                </div>
+            )}
     </section>
 
     <section class="text-center content-section id" id="learning">

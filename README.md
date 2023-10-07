@@ -19,4 +19,5 @@ that allows you to download the sound contents generated using our app.
 - Ignat Dragos
 - Morosanu Tudor
 - Plesca Evelyn
-- Rizea Tudor
+- Rizoiu Tudor
+- Simu Radu

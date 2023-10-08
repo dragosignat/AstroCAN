@@ -7,24 +7,24 @@ export default function Home() {
     const [videoUrl, setVideoUrl] = useState('');
 
     const handleImageUpload = async (e) => {
+        setVideoUrl('');
         const file = e.target.files[0];
 
         const reader = new FileReader();
 
         reader.onload = async () => {
-            const imageData = reader.result.split(',')[1]; // Extract base64 data
+            const imageData = reader.result.split(',')[1];
 
             try {
-                const response = await axios.post('YOUR_API_ENDPOINT', {
-                    imageData: imageData
+                const response = await axios.post('http://192.168.1.122:8000/image', {
+                    "base64_image": imageData
                 });
 
-                const videoUrl = response.data.videoUrl;
-                setVideoUrl('https://www.youtube.com/watch?v=S6PN19WRIV0&ab_channel=AlexePaul');
+                const videoUrl = response.data.video_url;
+                setVideoUrl(videoUrl);
             } catch (error) {
                 console.error('Error uploading image:', error);
             }
-            setVideoUrl('https://www.youtube.com/watch?v=S6PN19WRIV0&ab_channel=AlexePaul');
         };
 
         reader.readAsDataURL(file);
@@ -40,7 +40,8 @@ export default function Home() {
     <head>
     <meta charset="utf-8"></meta>
     <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no"></meta>
-    <title>Home - AstroCAN</title>
+    <title>AstroCAN</title>
+    <link rel="icon" href="favicon.ico" />
     <link rel="stylesheet" href="assets/bootstrap/css/bootstrap.min.css"></link>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic&amp;display=swap"></link>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Cabin:700&amp;display=swap"></link>
@@ -72,7 +73,7 @@ export default function Home() {
                 <div class="row">
                     <div class="col-lg-8 mx-auto">
                         <h1 class="brand-heading">AstroCAN</h1>
-                        <p class="intro-text"><strong>Discover the sounds of your favorite images.</strong></p><a class="btn btn-link btn-circle" role="button" href="#"><i class="fa fa-angle-double-down animated"></i></a>
+                        <p class="intro-text"><strong>Discover the sounds of your favorite images.</strong></p><a class="btn btn-link btn-circle" role="button" href="#about"><i class="fa fa-angle-double-down animated"></i></a>
                     </div>
                 </div>
             </div>
@@ -92,50 +93,67 @@ export default function Home() {
         </div>
     </section>
 
-    <section class="text-center content-section id" id="listen">
-        <input type="file" accept="image/*" onChange={handleImageUpload} />
-            {videoUrl && (
-                <div>
-                    <h2>Generated Video</h2>
-                    <video width="600" height="400" controls>
-                        <source src={videoUrl} type="video/mp4" />
-                        Your browser does not support the video tag.
-                    </video>
-                </div>
-            )}
-    </section>
+    <section className="text-center content-section id" id="listen">
+  <div className="container">
+    <h2>Listen</h2>
 
-    <section class="text-center content-section id" id="learning">
-      <div class="container py-4 py-xl-5">
-        <div class="row mb-5">
-          <div class="col-md-8 col-xl-6 text-center mx-auto">
-            <h2>Learn</h2>
-                <p class="w-lg-50">Learn more about our environment.</p>
-          </div>
-        </div>
+    <input
+      type="file"
+      accept="image/*"
+      onChange={handleImageUpload}
+      style={{ display: 'none' }}
+      id="fileInput"
+    />
 
-        <div class="row gy-4 row-cols-1 row-cols-md-2">
-          <div class="col">
-              <div class="d-flex flex-column flex-lg-row">
-                <video width="600" height="400" controls>
-                  <source src="../videos/WhereAretheStars_SeeHowLightPollutionAffectsNightSkies_ShortFilmShowcase" type="video/mp4"></source>
-                    Your browser does not support the video tag.
-                </video>
-              </div>
-          </div>
+    <label
+      htmlFor="fileInput"
+      className="custom-file-upload-button2"
+    >
+    <span>Upload</span>
+    </label>
 
-          <div class="col">
-              <div class="d-flex flex-column flex-lg-row">
-                <video width="600" height="400" controls>
-                  <source src="../videos/WhereAretheStars_SeeHowLightPollutionAffectsNightSkies_ShortFilmShowcase.mp4" type="video/mp4"></source>
-                    Your browser does not support the video tag.
-                </video>
-              </div>
-          </div>
+    {videoUrl && (
+      <div style={{ marginTop: '30px' }}>
+      <audio controls>
+        <source src={videoUrl} type="audio/wav" />
+      </audio>
+      </div>
+    )}
+  </div>
+</section>
 
+
+    <section class="text-center content-section" id="learning">
+  <div class="container py-4 py-xl-5">
+    <div class="row mb-5">
+      <div class="col-md-8 col-xl-6 text-center mx-auto">
+        <h2>Learn</h2>
+        <p class="w-lg-50">Learn more about our environment.</p>
+      </div>
+    </div>
+
+    <div class="row gy-4 row-cols-1 row-cols-md-2">
+      <div class="col">
+        <div class="d-flex flex-column align-items-center">
+          <video width="600" height="400" controls>
+            <source src="./assets/videos/video1.mp4" type="video/mp4" />
+          </video>
+          <h4 style={{ marginTop: '15px' }}>How Light Pollution Affects Night Skies</h4>
         </div>
       </div>
-    </section>
+
+      <div class="col">
+        <div class="d-flex flex-column align-items-center">
+          <video width="600" height="400" controls>
+            <source src="./assets/videos/video2.mp4" type="video/mp4" />
+          </video>
+          <h4 style={{ marginTop: '15px' }}>What is Light Pollution</h4>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
 
     <section class="text-center content-section" id="pricing">
       <div class="container py-4 py-xl-5">
@@ -170,11 +188,11 @@ export default function Home() {
                       </div>
                   </div>
                   <div class="bg-body-tertiary border rounded border-0 p-4">
-                      <ul class="list-unstyled">
+                      <ul class="list-unstyled" style={{textAlign: 'left'}}>
                           <li class="d-flex mb-2"><span class="bs-icon-xs bs-icon-rounded bs-icon-primary-light bs-icon me-2"></span><span><span style={{color: 'rgb(0, 0, 0)'}}>Generate sounds using our app</span></span></li>
                           <li class="d-flex mb-2"><span class="bs-icon-xs bs-icon-rounded bs-icon-primary-light bs-icon me-2"></span><span><span style={{color: 'rgb(0, 0, 0)'}}>Educate yourself about the environment</span></span></li>
                           <li class="d-flex mb-2"><span class="bs-icon-xs bs-icon-rounded bs-icon-primary-light bs-icon me-2"></span><span><span style={{color: 'rgb(0, 0, 0)'}}>Explore a new meditation playground</span></span></li>
-                          <li class="d-flex mb-2"><span class="bs-icon-xs bs-icon-rounded bs-icon-primary-light bs-icon me-2"></span><span><span style={{color: 'rgb(0, 0, 0)'}}>Download any generated sound content and access it offline</span></span></li>
+                          <li class="d-flex mb-2"><span class="bs-icon-xs bs-icon-rounded bs-icon-primary-light bs-icon me-2"></span><span><span style={{color: 'rgb(0, 0, 0)', textAlign: 'left'}}>Download any generated sound content and access it offline</span></span></li>
                       </ul>
                   </div>
               </div>

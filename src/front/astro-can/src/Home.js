@@ -1,24 +1,61 @@
-<!DOCTYPE html>
-<html data-bs-theme="light" lang="en">
+import axios from 'axios';
+import React, { useEffect, useState } from 'react'
+import { Link } from 'react-router-dom'
 
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+export default function Home() {
+
+    const [videoUrl, setVideoUrl] = useState('');
+
+    const handleImageUpload = async (e) => {
+        const file = e.target.files[0];
+
+        const reader = new FileReader();
+
+        reader.onload = async () => {
+            const imageData = reader.result.split(',')[1]; // Extract base64 data
+
+            try {
+                const response = await axios.post('YOUR_API_ENDPOINT', {
+                    imageData: imageData
+                });
+
+                const videoUrl = response.data.videoUrl;
+                setVideoUrl('https://www.youtube.com/watch?v=S6PN19WRIV0&ab_channel=AlexePaul');
+            } catch (error) {
+                console.error('Error uploading image:', error);
+            }
+            setVideoUrl('https://www.youtube.com/watch?v=S6PN19WRIV0&ab_channel=AlexePaul');
+        };
+
+        reader.readAsDataURL(file);
+    };
+
+    useEffect((e) => {
+       window.scrollTo(0, 0);
+    }, []);
+
+  return (
+    <div>
+    <html data-bs-theme="light" lang="en"></html>
+    <head>
+    <meta charset="utf-8"></meta>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no"></meta>
     <title>Home - AstroCAN</title>
-    <link rel="stylesheet" href="assets/bootstrap/css/bootstrap.min.css">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic&amp;display=swap">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Cabin:700&amp;display=swap">
-    <link rel="stylesheet" href="assets/fonts/font-awesome.min.css">
-    <link rel="stylesheet" href="assets/css/Pricing-Free-Paid-badges.css">
-    <link rel="stylesheet" href="assets/css/Pricing-Free-Paid-icons.css">
+    <link rel="stylesheet" href="assets/bootstrap/css/bootstrap.min.css"></link>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic&amp;display=swap"></link>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Cabin:700&amp;display=swap"></link>
+    <link rel="stylesheet" href="assets/fonts/font-awesome.min.css"></link>
+    <link rel="stylesheet" href="assets/css/Pricing-Free-Paid-badges.css"></link>
+    <link rel="stylesheet" href="assets/css/Pricing-Free-Paid-icons.css"></link>
 </head>
 
 <body id="page-top" data-bs-spy="scroll" data-bs-target="#mainNav" data-bs-offset="77">
+    <div>
     <nav class="navbar navbar-expand-md fixed-top navbar-light" id="mainNav">
-        <div class="container"><a class="navbar-brand" href="#"></a><button data-bs-toggle="collapse" class="navbar-toggler navbar-toggler-right" data-bs-target="#navbarResponsive" type="button" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation" value="Menu"><i class="fa fa-bars"></i></button><img src="assets/img/rsz_astrocan_logo.png" width="175" height="81">
+        <div class="container"><a class="navbar-brand" href="#"></a><button data-bs-toggle="collapse" class="navbar-toggler navbar-toggler-right" data-bs-target="#navbarResponsive" type="button" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation" value="Menu"><i class="fa fa-bars"></i></button><img src="assets/img/rsz_astrocan_logo.png" width="175" height="81"></img>
             <div class="collapse navbar-collapse" id="navbarResponsive">
                 <ul class="navbar-nav ms-auto">
-                    <li class="nav-item nav-link"><a class="nav-link active" href="#about">About</a></li>
+                    <li class="nav-item nav-link"><a class="nav-link" href="#about">About</a></li>
                     <li class="nav-item nav-link"><a class="nav-link" href="#listen">Listen</a></li>
                     <li class="nav-item nav-link"><a class="nav-link" href="#learning">Learn</a></li>
                     <li class="nav-item nav-link"><a class="nav-link" href="#pricing">Pricing</a></li>
@@ -28,14 +65,14 @@
             </div>
         </div>
     </nav>
-
-    <header class="masthead" style="background-image:url('assets/img/november-30-2019-star-cluster-westerlund-2.jpg');">
+    
+    <header class="masthead" style={{ backgroundImage: 'url("assets/img/background.jpg")'}}>
         <div class="intro-body">
             <div class="container">
                 <div class="row">
                     <div class="col-lg-8 mx-auto">
                         <h1 class="brand-heading">AstroCAN</h1>
-                        <p class="intro-text"><strong>Discover the sounds of your favorite images.</strong></p><a class="btn btn-link btn-circle" role="button" href="#about"><i class="fa fa-angle-double-down animated"></i></a>
+                        <p class="intro-text"><strong>Discover the sounds of your favorite images.</strong></p><a class="btn btn-link btn-circle" role="button" href="#"><i class="fa fa-angle-double-down animated"></i></a>
                     </div>
                 </div>
             </div>
@@ -56,7 +93,16 @@
     </section>
 
     <section class="text-center content-section id" id="listen">
-
+        <input type="file" accept="image/*" onChange={handleImageUpload} />
+            {videoUrl && (
+                <div>
+                    <h2>Generated Video</h2>
+                    <video width="600" height="400" controls>
+                        <source src={videoUrl} type="video/mp4" />
+                        Your browser does not support the video tag.
+                    </video>
+                </div>
+            )}
     </section>
 
     <section class="text-center content-section id" id="learning">
@@ -72,7 +118,7 @@
           <div class="col">
               <div class="d-flex flex-column flex-lg-row">
                 <video width="600" height="400" controls>
-                  <source src="../videos/WhereAretheStars_SeeHowLightPollutionAffectsNightSkies_ShortFilmShowcase" type="video/mp4">
+                  <source src="../videos/WhereAretheStars_SeeHowLightPollutionAffectsNightSkies_ShortFilmShowcase" type="video/mp4"></source>
                     Your browser does not support the video tag.
                 </video>
               </div>
@@ -81,7 +127,7 @@
           <div class="col">
               <div class="d-flex flex-column flex-lg-row">
                 <video width="600" height="400" controls>
-                  <source src="../videos/WhereAretheStars_SeeHowLightPollutionAffectsNightSkies_ShortFilmShowcase.mp4" type="video/mp4">
+                  <source src="../videos/WhereAretheStars_SeeHowLightPollutionAffectsNightSkies_ShortFilmShowcase.mp4" type="video/mp4"></source>
                     Your browser does not support the video tag.
                 </video>
               </div>
@@ -110,9 +156,9 @@
                   </div>
                   <div class="bg-body-tertiary border rounded border-0 p-4">
                       <ul class="list-unstyled">
-                          <li class="d-flex mb-2"><span class="bs-icon-xs bs-icon-rounded bs-icon-primary-light bs-icon me-2"></span><span><span style="color: rgb(0, 0, 0);">Generate sounds using our app</span></span></li>
-                          <li class="d-flex mb-2"><span class="bs-icon-xs bs-icon-rounded bs-icon-primary-light bs-icon me-2"></span><span><span style="color: rgb(0, 0, 0);">Educate yourself about the environment</span></span></li>
-                          <li class="d-flex mb-2"><span class="bs-icon-xs bs-icon-rounded bs-icon-primary-light bs-icon me-2"></span><span><span style="color: rgb(0, 0, 0);">Explore a new meditation playground</span></span></li>
+                          <li class="d-flex mb-2"><span class="bs-icon-xs bs-icon-rounded bs-icon-primary-light bs-icon me-2"></span><span><span style={{color: 'rgb(0, 0, 0)'}}>Generate sounds using our app</span></span></li>
+                          <li class="d-flex mb-2"><span class="bs-icon-xs bs-icon-rounded bs-icon-primary-light bs-icon me-2"></span><span><span style={{color: 'rgb(0, 0, 0)'}}>Educate yourself about the environment</span></span></li>
+                          <li class="d-flex mb-2"><span class="bs-icon-xs bs-icon-rounded bs-icon-primary-light bs-icon me-2"></span><span><span style={{color: 'rgb(0, 0, 0)'}}>Explore a new meditation playground</span></span></li>
                       </ul>
                   </div>
               </div>
@@ -125,10 +171,10 @@
                   </div>
                   <div class="bg-body-tertiary border rounded border-0 p-4">
                       <ul class="list-unstyled">
-                          <li class="d-flex mb-2"><span class="bs-icon-xs bs-icon-rounded bs-icon-primary-light bs-icon me-2"></span><span><span style="color: rgb(0, 0, 0);">Generate sounds using our app</span></span></li>
-                          <li class="d-flex mb-2"><span class="bs-icon-xs bs-icon-rounded bs-icon-primary-light bs-icon me-2"></span><span><span style="color: rgb(0, 0, 0);">Educate yourself about the environment</span></span></li>
-                          <li class="d-flex mb-2"><span class="bs-icon-xs bs-icon-rounded bs-icon-primary-light bs-icon me-2"></span><span><span style="color: rgb(0, 0, 0);">Explore a new meditation playground</span></span></li>
-                          <li class="d-flex mb-2"><span class="bs-icon-xs bs-icon-rounded bs-icon-primary-light bs-icon me-2"></span><span><span style="color: rgb(0, 0, 0);">Download any generated sound content and access it offline</span></span></li>
+                          <li class="d-flex mb-2"><span class="bs-icon-xs bs-icon-rounded bs-icon-primary-light bs-icon me-2"></span><span><span style={{color: 'rgb(0, 0, 0)'}}>Generate sounds using our app</span></span></li>
+                          <li class="d-flex mb-2"><span class="bs-icon-xs bs-icon-rounded bs-icon-primary-light bs-icon me-2"></span><span><span style={{color: 'rgb(0, 0, 0)'}}>Educate yourself about the environment</span></span></li>
+                          <li class="d-flex mb-2"><span class="bs-icon-xs bs-icon-rounded bs-icon-primary-light bs-icon me-2"></span><span><span style={{color: 'rgb(0, 0, 0)'}}>Explore a new meditation playground</span></span></li>
+                          <li class="d-flex mb-2"><span class="bs-icon-xs bs-icon-rounded bs-icon-primary-light bs-icon me-2"></span><span><span style={{color: 'rgb(0, 0, 0)'}}>Download any generated sound content and access it offline</span></span></li>
                       </ul>
                   </div>
               </div>
@@ -147,68 +193,55 @@
             <div class="row gy-4 row-cols-1 row-cols-md-2 row-cols-lg-3">
                 <div class="col">
                     <div class="card border-0 shadow-none">
-                        <div class="card-body d-flex align-items-center p-0"><img class="rounded-circle flex-shrink-0 me-3 fit-cover" width="130" height="75">
-                            <div>
+                            <div style={{height: '75px', display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
                                 <h5 class="fw-bold text-primary mb-0">Honceriu Emilian</h5>
                             </div>
-                        </div>
                     </div>
                 </div>
 
                 <div class="col">
-                    <div class="card border-0 shadow-none">
-                        <div class="card-body d-flex align-items-center p-0"><img class="rounded-circle flex-shrink-0 me-3 fit-cover" width="130" height="75">
-                            <div>
+                <div class="card border-0 shadow-none">
+                            <div style={{height: '75px', display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
                                 <h5 class="fw-bold text-primary mb-0">Ignat Dragos</h5>
                             </div>
-                        </div>
                     </div>
                 </div>
 
                 <div class="col">
-                    <div class="card border-0 shadow-none">
-                        <div class="card-body d-flex align-items-center p-0"><img class="rounded-circle flex-shrink-0 me-3 fit-cover" width="130" height="75">
-                            <div>
+                <div class="card border-0 shadow-none">
+                            <div style={{height: '75px', display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
                                 <h5 class="fw-bold text-primary mb-0">Morosanu Tudor</h5>
                             </div>
-                        </div>
                     </div>
                 </div>
             </div>
-
-            </br>
 
             <div class="row gy-4 row-cols-1 row-cols-md-2 row-cols-lg-3">
                 <div class="col">
-                    <div class="card border-0 shadow-none">
-                        <div class="card-body d-flex align-items-center p-0"><img class="rounded-circle flex-shrink-0 me-3 fit-cover" width="130" height="75">
-                            <div>
+                <div class="card border-0 shadow-none">
+                            <div style={{height: '75px', display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
                                 <h5 class="fw-bold text-primary mb-0">Plesca Evelyn</h5>
                             </div>
-                        </div>
                     </div>
                 </div>
 
                 <div class="col">
-                    <div class="card border-0 shadow-none">
-                        <div class="card-body d-flex align-items-center p-0"><img class="rounded-circle flex-shrink-0 me-3 fit-cover" width="130" height="75">
-                            <div>
+                <div class="card border-0 shadow-none">
+                            <div style={{height: '75px', display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
                                 <h5 class="fw-bold text-primary mb-0">Rizoiu Tudor</h5>
                             </div>
-                        </div>
                     </div>
                 </div>
 
                 <div class="col">
-                    <div class="card border-0 shadow-none">
-                        <div class="card-body d-flex align-items-center p-0"><img class="rounded-circle flex-shrink-0 me-3 fit-cover" width="130" height="75">
-                            <div>
+                <div class="card border-0 shadow-none">
+                            <div style={{height: '75px', display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
                                 <h5 class="fw-bold text-primary mb-0">Simu Radu</h5>
                             </div>
-                        </div>
                     </div>
                 </div>
             </div>
+    </div>
     </section>
 
     <section class="text-center content-section" id="contact">
@@ -238,6 +271,8 @@
     </footer>
     <script src="assets/bootstrap/js/bootstrap.min.js"></script>
     <script src="assets/js/grayscale.js"></script>
-</body>
-
-</html>
+    </div>
+    </body>
+    </div>
+  )
+}

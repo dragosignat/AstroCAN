@@ -115,6 +115,12 @@ def calculate_sin(im, limits, t):
 
     return sound_sin, t
 
+
+def make_frame(t):
+    im = mp.ImageClip('images/stele.jpg')
+    return im
+
+
 def generate_video(image, sound):
     """
     Generate a video from the image and the sound.
@@ -131,18 +137,19 @@ def generate_video(image, sound):
     # Take an image and a sound and generate a video from them
 
     audio = mp.AudioFileClip(sound)
-    duration = audio.duration
-    video = mp.VideoClip(image, duration=duration)
+    video = mp.VideoFileClip(image)
 
-    video.set_audio(audio)
+    video = video.set_audio(audio)
+    video = video.set_duration(audio.duration)
+    video.fps = 30
 
     video.write_videofile('video.mp4', codec='libx264', audio_codec='aac')
 
     return "video.mp4"
 
 def main():
-    process_image('images/stele.jpg')
-    generate_video('images/stele.jpg', 'sound.wav')
+    #process_image('images/stele.jpg')
+    generate_video("images/stele.jpg", "piano.wav")
 
 
 if __name__ == "__main__":

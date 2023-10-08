@@ -7,24 +7,24 @@ export default function Home() {
     const [videoUrl, setVideoUrl] = useState('');
 
     const handleImageUpload = async (e) => {
+        setVideoUrl('');
         const file = e.target.files[0];
 
         const reader = new FileReader();
 
         reader.onload = async () => {
-            const imageData = reader.result.split(',')[1]; // Extract base64 data
+            const imageData = reader.result.split(',')[1];
 
             try {
-                const response = await axios.post('YOUR_API_ENDPOINT', {
-                    imageData: imageData
+                const response = await axios.post('http://192.168.1.122:8000/image', {
+                    "base64_image": imageData
                 });
 
-                const videoUrl = response.data.videoUrl;
-                setVideoUrl('https://nasa-hackathon-cluj.s3.eu-north-1.amazonaws.com/cc2a4fae-0aa2-455f-8b0d-a9ddf80363f7_video.mp4');
+                const videoUrl = response.data.video_url;
+                setVideoUrl(videoUrl);
             } catch (error) {
                 console.error('Error uploading image:', error);
             }
-            setVideoUrl('https://nasa-hackathon-cluj.s3.eu-north-1.amazonaws.com/cc2a4fae-0aa2-455f-8b0d-a9ddf80363f7_video.mp4');
         };
 
         reader.readAsDataURL(file);
@@ -40,7 +40,8 @@ export default function Home() {
     <head>
     <meta charset="utf-8"></meta>
     <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no"></meta>
-    <title>Home - AstroCAN</title>
+    <title>AstroCAN</title>
+    <link rel="icon" href="favicon.ico" />
     <link rel="stylesheet" href="assets/bootstrap/css/bootstrap.min.css"></link>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic&amp;display=swap"></link>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Cabin:700&amp;display=swap"></link>
@@ -113,9 +114,9 @@ export default function Home() {
 
     {videoUrl && (
       <div style={{ marginTop: '30px' }}>
-        <video width="750" height="500" controls>
-          <source src={videoUrl} type="video/mp4" />
-        </video>
+      <audio controls>
+        <source src={videoUrl} type="audio/wav" />
+      </audio>
       </div>
     )}
   </div>

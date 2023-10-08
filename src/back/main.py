@@ -6,6 +6,7 @@ from fastapi.responses import JSONResponse
 from pydantic import BaseModel
 from base64 import b64decode
 from image_processing import process_image, generate_video
+from fastapi.middleware.cors import CORSMiddleware
 import numpy as np
 import cv2
 import boto3
@@ -15,9 +16,21 @@ import uuid
 # DEBUG = True 
 DEBUG = False
 HARD_CODED = True
+HARD_CODED = False 
 
 
 app = FastAPI()
+
+
+origins = ["*"]
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 @app.get("/")
 async def root():
@@ -37,10 +50,16 @@ async def upload(uploaded_image: ImageScheme):
          that was uploaded to a CDN (after processing).
     """
     
-    # Decode image
-    img_np = np.frombuffer(b64decode(uploaded_image.base64_image), dtype=np.uint8)
-    # Convert the numpy array to an image
-    img = cv2.imdecode(img_np, cv2.IMREAD_UNCHANGED)
+    print("Processing image...")
+
+    # Decode image and save it to disk
+    img_path = "image.jpeg"
+    img = b64decode(uploaded_image.base64_image)
+    with open("image.jpeg", "wb") as f:
+        f.write(img)
+    # Open the image with openCV
+    img = cv2.imread(img_path)
+
 
     # Display the image (optional)
     if DEBUG:
@@ -53,8 +72,11 @@ async def upload(uploaded_image: ImageScheme):
     output_file = "sound.wav"
     process_image(img, output_file)
 
+    # Save the image to disk
+
     # Make the sound into a video
-    video_file = generate_video(img, output_file)
+    #video_file = generate_video(img_path, output_file)
+    video_file = output_file
     
 
     # Upload the video to S3 and get a link to it
@@ -71,6 +93,8 @@ def upload_to_s3(video_file):
     """
         Upload the video to S3 and get a link to it
     """
+
+    print("Uploading video to S3...")
     
     # Set up S3 client
 

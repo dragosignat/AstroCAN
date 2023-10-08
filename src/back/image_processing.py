@@ -1,6 +1,7 @@
 import cv2
 import numpy as np
 import soundfile as sf
+import moviepy.editor as mp
 import sys
 
 DEBUG = False
@@ -16,8 +17,8 @@ def process_image(image, output_file='sound.wav'):
 
     """
     # Load the image
-    #im = cv2.imread(image)
-    im = image
+    im = cv2.imread(image)
+    #im = image
 
     # Apply Gaussian blur
     im = cv2.GaussianBlur(im, (0, 0), 3)
@@ -39,7 +40,12 @@ def process_image(image, output_file='sound.wav'):
         BW = im
 
     # Invert the binary image
-    BW = cv2.bitwise_not(BW)
+    #BW = cv2.bitwise_not(BW)
+
+    if DEBUG:
+        cv2.imshow('Image', BW)
+        cv2.waitKey(0)
+        cv2.destroyAllWindows()
 
     combined_sound = np.array([])
 
@@ -49,6 +55,7 @@ def process_image(image, output_file='sound.wav'):
     # Initialize audio settings
     fs = 44100
 
+    print(len(contours))
     for k, contour in enumerate(contours):
         X = contour[:, 0, 1]
         Y = contour[:, 0, 0]
@@ -121,12 +128,21 @@ def generate_video(image, sound):
     # fa si un visualizer pentru sunet
     # Returneaza path-ul catre video (salveaza-l pe disk, local)
 
-
     # Take an image and a sound and generate a video from them
+
+    audio = mp.AudioFileClip(sound)
+    duration = audio.duration
+    video = mp.VideoClip(image, duration=duration)
+
+    video.set_audio(audio)
+
+    video.write_videofile('video.mp4', codec='libx264', audio_codec='aac')
+
     return "video.mp4"
 
 def main():
-    process_image('images/stele.jpeg')
+    process_image('images/stele.jpg')
+    generate_video('images/stele.jpg', 'sound.wav')
 
 
 if __name__ == "__main__":

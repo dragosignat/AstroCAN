@@ -20,11 +20,11 @@ export default function Home() {
                 });
 
                 const videoUrl = response.data.videoUrl;
-                setVideoUrl('https://www.youtube.com/watch?v=S6PN19WRIV0&ab_channel=AlexePaul');
+                setVideoUrl('https://nasa-hackathon-cluj.s3.eu-north-1.amazonaws.com/cc2a4fae-0aa2-455f-8b0d-a9ddf80363f7_video.mp4');
             } catch (error) {
                 console.error('Error uploading image:', error);
             }
-            setVideoUrl('https://www.youtube.com/watch?v=S6PN19WRIV0&ab_channel=AlexePaul');
+            setVideoUrl('https://nasa-hackathon-cluj.s3.eu-north-1.amazonaws.com/cc2a4fae-0aa2-455f-8b0d-a9ddf80363f7_video.mp4');
         };
 
         reader.readAsDataURL(file);
@@ -72,7 +72,7 @@ export default function Home() {
                 <div class="row">
                     <div class="col-lg-8 mx-auto">
                         <h1 class="brand-heading">AstroCAN</h1>
-                        <p class="intro-text"><strong>Discover the sounds of your favorite images.</strong></p><a class="btn btn-link btn-circle" role="button" href="#"><i class="fa fa-angle-double-down animated"></i></a>
+                        <p class="intro-text"><strong>Discover the sounds of your favorite images.</strong></p><a class="btn btn-link btn-circle" role="button" href="#about"><i class="fa fa-angle-double-down animated"></i></a>
                     </div>
                 </div>
             </div>
@@ -92,50 +92,67 @@ export default function Home() {
         </div>
     </section>
 
-    <section class="text-center content-section id" id="listen">
-        <input type="file" accept="image/*" onChange={handleImageUpload} />
-            {videoUrl && (
-                <div>
-                    <h2>Generated Video</h2>
-                    <video width="600" height="400" controls>
-                        <source src={videoUrl} type="video/mp4" />
-                        Your browser does not support the video tag.
-                    </video>
-                </div>
-            )}
-    </section>
+    <section className="text-center content-section id" id="listen">
+  <div className="container">
+    <h2>Listen</h2>
 
-    <section class="text-center content-section id" id="learning">
-      <div class="container py-4 py-xl-5">
-        <div class="row mb-5">
-          <div class="col-md-8 col-xl-6 text-center mx-auto">
-            <h2>Learn</h2>
-                <p class="w-lg-50">Learn more about our environment.</p>
-          </div>
-        </div>
+    <input
+      type="file"
+      accept="image/*"
+      onChange={handleImageUpload}
+      style={{ display: 'none' }}
+      id="fileInput"
+    />
 
-        <div class="row gy-4 row-cols-1 row-cols-md-2">
-          <div class="col">
-              <div class="d-flex flex-column flex-lg-row">
-                <video width="600" height="400" controls>
-                  <source src="../videos/WhereAretheStars_SeeHowLightPollutionAffectsNightSkies_ShortFilmShowcase" type="video/mp4"></source>
-                    Your browser does not support the video tag.
-                </video>
-              </div>
-          </div>
+    <label
+      htmlFor="fileInput"
+      className="custom-file-upload-button2"
+    >
+    <span>Upload</span>
+    </label>
 
-          <div class="col">
-              <div class="d-flex flex-column flex-lg-row">
-                <video width="600" height="400" controls>
-                  <source src="../videos/WhereAretheStars_SeeHowLightPollutionAffectsNightSkies_ShortFilmShowcase.mp4" type="video/mp4"></source>
-                    Your browser does not support the video tag.
-                </video>
-              </div>
-          </div>
+    {videoUrl && (
+      <div style={{ marginTop: '30px' }}>
+        <video width="750" height="500" controls>
+          <source src={videoUrl} type="video/mp4" />
+        </video>
+      </div>
+    )}
+  </div>
+</section>
 
+
+    <section class="text-center content-section" id="learning">
+  <div class="container py-4 py-xl-5">
+    <div class="row mb-5">
+      <div class="col-md-8 col-xl-6 text-center mx-auto">
+        <h2>Learn</h2>
+        <p class="w-lg-50">Learn more about our environment.</p>
+      </div>
+    </div>
+
+    <div class="row gy-4 row-cols-1 row-cols-md-2">
+      <div class="col">
+        <div class="d-flex flex-column align-items-center">
+          <video width="600" height="400" controls>
+            <source src="./assets/videos/video1.mp4" type="video/mp4" />
+          </video>
+          <h4 style={{ marginTop: '15px' }}>How Light Pollution Affects Night Skies</h4>
         </div>
       </div>
-    </section>
+
+      <div class="col">
+        <div class="d-flex flex-column align-items-center">
+          <video width="600" height="400" controls>
+            <source src="./assets/videos/video2.mp4" type="video/mp4" />
+          </video>
+          <h4 style={{ marginTop: '15px' }}>What is Light Pollution</h4>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
 
     <section class="text-center content-section" id="pricing">
       <div class="container py-4 py-xl-5">
@@ -170,11 +187,11 @@ export default function Home() {
                       </div>
                   </div>
                   <div class="bg-body-tertiary border rounded border-0 p-4">
-                      <ul class="list-unstyled">
+                      <ul class="list-unstyled" style={{textAlign: 'left'}}>
                           <li class="d-flex mb-2"><span class="bs-icon-xs bs-icon-rounded bs-icon-primary-light bs-icon me-2"></span><span><span style={{color: 'rgb(0, 0, 0)'}}>Generate sounds using our app</span></span></li>
                           <li class="d-flex mb-2"><span class="bs-icon-xs bs-icon-rounded bs-icon-primary-light bs-icon me-2"></span><span><span style={{color: 'rgb(0, 0, 0)'}}>Educate yourself about the environment</span></span></li>
                           <li class="d-flex mb-2"><span class="bs-icon-xs bs-icon-rounded bs-icon-primary-light bs-icon me-2"></span><span><span style={{color: 'rgb(0, 0, 0)'}}>Explore a new meditation playground</span></span></li>
-                          <li class="d-flex mb-2"><span class="bs-icon-xs bs-icon-rounded bs-icon-primary-light bs-icon me-2"></span><span><span style={{color: 'rgb(0, 0, 0)'}}>Download any generated sound content and access it offline</span></span></li>
+                          <li class="d-flex mb-2"><span class="bs-icon-xs bs-icon-rounded bs-icon-primary-light bs-icon me-2"></span><span><span style={{color: 'rgb(0, 0, 0)', textAlign: 'left'}}>Download any generated sound content and access it offline</span></span></li>
                       </ul>
                   </div>
               </div>

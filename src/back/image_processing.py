@@ -1,6 +1,7 @@
 import cv2
 import numpy as np
 import soundfile as sf
+import moviepy.editor as mp
 import sys
 
 DEBUG = False
@@ -39,7 +40,12 @@ def process_image(image, output_file='sound.wav'):
         BW = im
 
     # Invert the binary image
-    BW = cv2.bitwise_not(BW)
+    #BW = cv2.bitwise_not(BW)
+
+    if DEBUG:
+        cv2.imshow('Image', BW)
+        cv2.waitKey(0)
+        cv2.destroyAllWindows()
 
     combined_sound = np.array([])
 
@@ -67,11 +73,6 @@ def process_image(image, output_file='sound.wav'):
 
         # Append the sound to the combined sound
         combined_sound = np.append(combined_sound, sin_sound)
-
-
-        if DEBUG:
-            # Pause between sounds (optional)
-            cv2.waitKey(200)
     
     # Save the sound to a file
     sf.write(output_file, combined_sound, fs)
@@ -108,6 +109,12 @@ def calculate_sin(im, limits, t):
 
     return sound_sin, t
 
+
+def make_frame(t):
+    im = mp.ImageClip('images/stele.jpg')
+    return im
+
+
 def generate_video(image, sound):
     """
     Generate a video from the image and the sound.
@@ -121,12 +128,60 @@ def generate_video(image, sound):
     # fa si un visualizer pentru sunet
     # Returneaza path-ul catre video (salveaza-l pe disk, local)
 
-
     # Take an image and a sound and generate a video from them
+
+    audio = mp.AudioFileClip(sound)
+    # Image is a openCV image
+    video = mp.VideoFileClip(image)
+
+    video = video.set_audio(audio)
+    video = video.set_duration(audio.duration)
+    video.fps = 30
+
+    video.write_videofile('video.mp4', codec='libx264', audio_codec='aac')
+
     return "video.mp4"
 
+def generate_video_with_line(image_path, sound_path, output_path):
+    # Load the image and sound
+    image = mp.VideoFileClip(image_path)
+    audio = mp.AudioFileClip(sound_path)
+
+    # Create a line animation video clip
+    line_animation = mp.VideoClip(make_frame_with_line, duration=audio.duration)
+    line_animation = line_animation.set_audio(audio)
+
+    # Composite the line animation onto the image
+    result_video = mp.CompositeVideoClip([image, line_animation])
+
+    # Write the final video to the output path
+    result_video.write_videofile(output_path, codec='libx264', audio_codec='aac', fps=30)
+
+
+def make_frame_with_line(t, line_color=(255, 0, 0), line_thickness=5):
+    # Create a frame (numpy array) with the line animation
+    w, h = 2400, 1200  # Adjust for your video dimensions
+    # Set the frame color to white
+    frame = np.full((h, w, 3), 255, dtype='uint8')
+
+    # Calculate the position of the line based on time 't'
+    line_x = int(t * (w - line_thickness))
+    line_y1 = 0
+    line_y2 = line_thickness  # Adjust for line thickness
+
+    # Draw the line on the frame
+    cv2.line(frame, (line_x, line_y1), (line_x + line_thickness, line_y2), line_color, line_thickness)
+
+    return frame
+
 def main():
-    process_image('images/stele.jpeg')
+    #process_image('images/stele.jpg')
+    generate_video("images/stele.jpg", "piano.wav")
+
+    image_path = 'images/stele.jpg'
+    sound_path = 'piano.wav'
+    output_path = 'output_video.mp4'
+    generate_video_with_line(image_path, sound_path, output_path)
 
 
 if __name__ == "__main__":

@@ -6,7 +6,9 @@ Users can also access a Learning side of the page, see the About, Pricing and Co
 For future development, we wish to continue this project in order to aid visually impaired individuals.
 
 ## Demo
-To be soon added.
+### Main page
+The web app showcases a startup page that includes the title of our app, a little motto and has a menu where you can get to all the parts of our app.
+<img src="demo-pictures/main.jpg" width="200px;" alt="Main page"/><br />
 
 ## Used technologies
 - MATLAB
